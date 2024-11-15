@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/panjf2000/ants/v2"
-	"github.com/shirou/gopsutil/v4/mem"
+	//"github.com/shirou/gopsutil/v4/mem"
 )
 
 var sum int32
@@ -20,20 +20,20 @@ func myFunc(i interface{}) {
 }
 
 func demoFunc() {
-	time.Sleep(1 * time.Second)
+	time.Sleep(25 * time.Second)
 	//fmt.Println("Hello World!")
 }
 
 func main() {
-	var printMemory = func() {
-		v, _ := mem.VirtualMemory()
-		fmt.Printf("Total: %v, Free:%v, UsedPercent:%f%%\n", v.Total, v.Free, v.UsedPercent)
-	}
+	// var printMemory = func() {
+	// 	v, _ := mem.VirtualMemory()
+	// 	fmt.Printf("Total: %v, Free:%v, UsedPercent:%f%%\n", v.Total, v.Free, v.UsedPercent)
+	// }
 
 	var printGoMemory = func() {
 		var m runtime.MemStats
 		runtime.ReadMemStats(&m)
-		fmt.Printf("Alloc = %v MiB\n", m.Alloc/1024)
+		fmt.Printf("Alloc = %v MiB\n", m.Alloc/(1024*1024))
 	}
 	defer ants.Release()
 
@@ -50,7 +50,7 @@ func main() {
 		_ = ants.Submit(syncCalculateSum)
 	}
 	wg.Wait()
-	printMemory()
+	//printMemory()
 	printGoMemory()
 	fmt.Printf("running goroutines: %d\n", ants.Running())
 	fmt.Printf("finish all tasks with common pool.\n")
@@ -68,7 +68,7 @@ func main() {
 		_ = p.Invoke(int32(i))
 	}
 	wg.Wait()
-	printMemory()
+	//printMemory()
 	printGoMemory()
 	fmt.Printf("running goroutines: %d\n", p.Running())
 	fmt.Printf("finish all tasks with a pool and an added func, result is %d\n", sum)
@@ -86,7 +86,7 @@ func main() {
 		_ = mp.Submit(syncCalculateSum)
 	}
 	wg.Wait()
-	printMemory()
+	//printMemory()
 	printGoMemory()
 	fmt.Printf("running goroutines: %d\n", mp.Running())
 	fmt.Printf("finish all tasks with multipool.\n")
@@ -102,7 +102,7 @@ func main() {
 		_ = mpf.Invoke(int32(i))
 	}
 	wg.Wait()
-	printMemory()
+	//printMemory()
 	printGoMemory()
 	fmt.Printf("running goroutines: %d\n", mpf.Running())
 	fmt.Printf("finish all tasks with multipool and func, result is %d\n", sum)
