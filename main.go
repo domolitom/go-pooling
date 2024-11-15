@@ -39,7 +39,7 @@ func main() {
 	}
 	wg.Wait()
 	fmt.Printf("running goroutines: %d\n", ants.Running())
-	fmt.Printf("finish all tasks.\n")
+	fmt.Printf("finish all tasks with common pool.\n")
 
 	// Use the pool with a function,
 	// set 10 to the capacity of goroutine pool and 1 second for expired duration.
@@ -55,7 +55,7 @@ func main() {
 	}
 	wg.Wait()
 	fmt.Printf("running goroutines: %d\n", p.Running())
-	fmt.Printf("finish all tasks, result is %d\n", sum)
+	fmt.Printf("finish all tasks with a pool and an added func, result is %d\n", sum)
 	if sum != 499500 {
 		panic("the final result is wrong!!!")
 	}
@@ -71,7 +71,7 @@ func main() {
 	}
 	wg.Wait()
 	fmt.Printf("running goroutines: %d\n", mp.Running())
-	fmt.Printf("finish all tasks.\n")
+	fmt.Printf("finish all tasks with multipool.\n")
 
 	// Use the MultiPoolFunc and set the capacity of 10 goroutine pools to (runTimes/10).
 	mpf, _ := ants.NewMultiPoolWithFunc(10, runTimes/10, func(i interface{}) {
@@ -85,7 +85,7 @@ func main() {
 	}
 	wg.Wait()
 	fmt.Printf("running goroutines: %d\n", mpf.Running())
-	fmt.Printf("finish all tasks, result is %d\n", sum)
+	fmt.Printf("finish all tasks with multipool and func, result is %d\n", sum)
 	if sum != 499500*2 {
 		panic("the final result is wrong!!!")
 	}
