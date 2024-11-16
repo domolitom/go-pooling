@@ -79,23 +79,32 @@ func main() {
 	// Use the MultiPool and set the capacity of the 10 goroutine pools to unlimited.
 	// If you use -1 as the pool size parameter, the size will be unlimited.
 	// There are two load-balancing algorithms for pools: ants.RoundRobin and ants.LeastTasks.
-	mp, _ := ants.NewMultiPool(10, -1, ants.RoundRobin)
-	defer mp.ReleaseTimeout(5 * time.Second)
-	for i := 0; i < runTimes; i++ {
-		wg.Add(1)
-		_ = mp.Submit(syncCalculateSum)
-	}
-	wg.Wait()
-	//printMemory()
-	printGoMemory()
-	fmt.Printf("running goroutines: %d\n", mp.Running())
-	fmt.Printf("finish all tasks with multipool.\n")
+	// mp, err := ants.NewMultiPool(10, -1, ants.RoundRobin)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// defer mp.ReleaseTimeout(5 * time.Second)
+	// for i := 0; i < runTimes; i++ {
+	// 	wg.Add(1)
+	// 	err = mp.Submit(syncCalculateSum)
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
+	// }
+	// wg.Wait()
+	// //printMemory()
+	// printGoMemory()
+	// fmt.Printf("running goroutines: %d\n", mp.Running())
+	// fmt.Printf("finish all tasks with multipool.\n")
 
 	// Use the MultiPoolFunc and set the capacity of 10 goroutine pools to (runTimes/10).
-	mpf, _ := ants.NewMultiPoolWithFunc(10, runTimes/10, func(i interface{}) {
+	mpf, err := ants.NewMultiPoolWithFunc(10, runTimes/10, func(i interface{}) {
 		myFunc(i)
 		wg.Done()
 	}, ants.LeastTasks)
+	if err != nil {
+		panic(err)
+	}
 	defer mpf.ReleaseTimeout(5 * time.Second)
 	for i := 0; i < runTimes; i++ {
 		wg.Add(1)
